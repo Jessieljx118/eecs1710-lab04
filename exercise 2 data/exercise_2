@@ -30,8 +30,7 @@ void draw() {
    image(building, x1-800, y1);
   
   x1 += speedX1;
-  x2 += speedX2;
-    
+  x2 += speedX2;    
   if (x1> width || x1<0) {
     speedX1 *= -1;
      x2 = 0;
