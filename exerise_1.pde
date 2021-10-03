@@ -5,7 +5,6 @@ void setup() {
   size(500, 400, P2D); 
   background(bgColor);
 }
-
 void draw() {  
   if (mousePressed) {
     fill(135, 206, 235);
