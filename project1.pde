@@ -1,5 +1,5 @@
 void setup(){
-  size(600,400);
+  size(600,400,P2D);
 }
 void draw(){
   colorMode(HSB,180,360,100);
@@ -36,6 +36,7 @@ class DaBai{
   Arm rightArm;
   Leg leftLeg;
   Leg rightLeg;
+  
   DaBai(float w,float l){
     this.w=w;this.l=l;
     head = new Head(l/4);
