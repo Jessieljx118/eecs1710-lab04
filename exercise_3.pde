@@ -1,77 +1,64 @@
-int y,mo,d,h,m,s; 
-PImage img;
-PFont myFont;
+String hour;
+String minute;
+String second;
 
-void setup(){
-size(500,500);
-img = loadImage("1.jpg");
+void setup()
+{
+  size(600, 600);
+  background(0,127,200);
+  stroke(255);
+  strokeWeight(3); 
+  textAlign(CENTER);
+  textSize(60);
+  
 }
 
-void draw(){
-image(img, 0, 0, 500, 500);
-s = second();   // Values from 0 - 59
-m = minute();   // Values from 0 - 59
-h = hour();     // Values from 0 - 23
-d = day();      // Values from 1 - 31
-mo = month();   // Values from 1 - 12
-y = year();     
+void draw()
+{
+  background(0,127,200);
+  float s = second(); // Values from 0 - 59
+  float m = minute(); // Values from 0 - 59
+  float h = hour(); // Values from 0 - 23
+  
+  rect(0,0,s,s);
+  rect(0,100,m,m);
+  rect(0,200,h*3.5,h*3.5);
 
-myFont=createFont("Arial",18);   
-myClockDraw();
-}
+  s =s/60*width; // Values from 0 - 59
+  m = m/60*width; // Values from 0 - 59
+  h = h/24*width; // Values from 0 - 23
 
-void myClockDraw(){
-translate(width/2,height/2);    
-fill(255);  
-ellipse(0,0,230,230);
-   
-stroke(255);      
-textFont(myFont);  
-fill(0,127);    
-text("12",-10,-75);
-text("3",78,6);
-text("6",-7,88);
-text("9",-88,6);
-text(y+"-"+mo+"-"+d,-40,-23);  
-   
-for(int i=1;i<=60;i++){
-pushMatrix();
-rotate(PI*2.0*i/60.0);  
-stroke(0);
-if(i%15==0){
-strokeWeight(3);
-line(0,-90,0,-100);
- }
- else if( i%5 ==0){
-strokeWeight(2);
-line(0,-92,0,-100);
-}
-else{       
-strokeWeight(1);
-line(0,-95,0,-100);
-}
-popMatrix();
-}
-pushMatrix();   
-   
-rotate(PI*2*s/60+PI);   
-stroke(0);
-strokeWeight(1);    
-line(0,0,0,90);    
-popMatrix();
+print("sec " + s + " min " + m + " hour " + h +" \n");
+  ellipse(width/2, height/2, s/4,s/4);
+  fill(255,127);
+  
+  ellipse(width/2, height/2, m/2.5,m/2.5);
+  fill(255,85);
+  
+  ellipse(width/2, height/2, h/2,h/2);
+  fill(255,50);
 
-pushMatrix();
-rotate(PI*2*m/60+PI);
-stroke(0);
-strokeWeight(3);
-line(0,0,0,70);  
-popMatrix();
+hour   = transform(hour());
+minute = transform(minute());
+second = transform(second());
 
-pushMatrix();
-rotate(PI*2*h/12+PI);
-stroke(0);
-strokeWeight(5);
-line(0,0,0,50);    
-popMatrix();
+text(hour + ":" + minute + ":" + second, width/2, height/6); 
 
 }
+
+String transform(int number)
+{
+  String value = "";
+  
+  if(number < 10)
+  {
+    value = "0" + number;
+  }
+  else
+  {
+    value = str(number);
+  }
+  
+  return value;
+}
+
