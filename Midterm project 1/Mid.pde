@@ -112,7 +112,6 @@ boolean rectOver=false;
 
     }
 
-
    if(timer.isFinished())
    {
    if(arrive&&life!=1) 
