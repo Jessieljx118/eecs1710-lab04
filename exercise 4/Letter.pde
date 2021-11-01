@@ -10,9 +10,7 @@ class Letter {
     position = new PVector(x, y);
     vertices = new PVector[s.getVertexCount()];
   }
-  
- 
-  
+   
   void draw() {
     shapeMode(CENTER);
     shape(s, position.x, position.y);
