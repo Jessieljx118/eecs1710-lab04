@@ -16,8 +16,7 @@ class Letter {
     shape(s, position.x, position.y);
   }
   
-  void run() {
-   
+  void run() { 
     draw();
   }
   
