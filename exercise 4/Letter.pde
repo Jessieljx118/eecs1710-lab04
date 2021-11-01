@@ -1,0 +1,26 @@
+class Letter {
+  
+  PShape s;
+  PVector position;
+  PVector[] vertices;
+  float spread = 0.5;
+  
+  Letter(PShape _s, float x, float y) {
+    s = _s;
+    position = new PVector(x, y);
+    vertices = new PVector[s.getVertexCount()];
+  }
+  
+ 
+  
+  void draw() {
+    shapeMode(CENTER);
+    shape(s, position.x, position.y);
+  }
+  
+  void run() {
+   
+    draw();
+  }
+  
+}
