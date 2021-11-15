@@ -1,90 +1,51 @@
-color IMPOSSIBLE=color(50);
-boolean px1_on=true;
-int count=1;
-float space=1;
+PImage base;
+float[]pt1;
+float[]pt2;
+float refraction=0.1;
 
 void setup() {
-  size(600,600);
-  PImage pic=loadImage("Deer.jpg");
-  pic.resize(width, height); 
-  pic.loadPixels();
-  loadPixels();
-  for (int i=0; i<pixels.length; i++) {
-    if (brightness(pic.pixels[i])<240) {
-      pixels[i]=pic.pixels[i];
-    } else {
-      pixels[i]=IMPOSSIBLE;
-    }
+  size(720, 480);
+  base=loadImage("kobe.jpg");
+  base.resize(width, height);
+  base.loadPixels();
+
+  pt1=new float[width*height];
+  pt2=new float[width*height];
+  for (int i=0; i<pt1.length; i++) {
+    pt1[i]=0;
+    pt2[i]=0;
   }
-  updatePixels();
 }
 
 void draw() {
+  if (mousePressed) {
+    pt2[mouseX+mouseY*width]+=800;
+  }
+
+  for (int x=1; x<width-1; x++) {
+    for (int y=1; y<height-1; y++) {
+      float avg=(pt2[x-1+y*width]+pt2[x+1+y*width]+pt2[x+(y-1)*width]+pt2[x+(y+1)*width])/4;
+      pt1[x+y*width]=avg*2-pt1[x+y*width];
+      pt1[x+y*width]*=0.98;
+    }
+  }
+
   loadPixels();
-  if (px1_on) {
-    for (int x=0; x<width-1; x+=2) {
-      for (int y=0; y<height-1; y+=2) {
-        updateColor( x, y);
-      }
-    }
-  } else {
-    for (int x=1; x<width-1; x+=2) {
-      for (int y=1; y<height-1; y+=2) {
-        updateColor( x, y);
-      }
+  float xoffset, yoffset;
+  for (int x=1; x<width-1; x++) {
+    for (int y=1; y<height-1; y++) {
+      xoffset=(pt1[x-1+y*width]+pt1[x+1+y*width])*refraction;
+      yoffset=(pt1[x+(y-1)*width]+pt1[x+(y-1)*width])*refraction;
+      if (x+xoffset<0)xoffset=-x;
+      if (x+xoffset>width-1)xoffset=width-1-x;
+      if (y+yoffset<0)yoffset=-y;
+      if (y+yoffset>height-1)yoffset=height-1-y;
+      pixels[x+y*width]=base.pixels[int(x+xoffset)+int(y+yoffset)*width];
     }
   }
-  px1_on=!px1_on;
   updatePixels();
-}
 
-void updateColor(int x, int y) {
-  color c1=pixels[x+y*width];
-  color c2=pixels[x+1+y*width];
-  color c3=pixels[x+(y+1)*width];
-  color c4=pixels[x+1+(y+1)*width];
-
-  color[]result=updateBlock(c1, c2, c3, c4);
-  pixels[x+y*width]=result[0];
-  pixels[x+1+y*width]=result[1];
-  pixels[x+(y+1)*width]=result[2];
-  pixels[x+1+(y+1)*width]=result[3];
-}
-
-boolean matchPattern(color[]cls, boolean[]bs) {
-  for (int i=0; i<4; i++) {
-    if ((cls[i]!=IMPOSSIBLE) != bs[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-color[]updateBlock(color c1, color c2, color c3, color c4) {
-  color[]cls={c1, c2, c3, c4};
-  if (matchPattern(cls, new boolean[]{false, false, false, false})) {
-    return new color[]{IMPOSSIBLE, IMPOSSIBLE, IMPOSSIBLE, IMPOSSIBLE};
-  } else if (c3!=IMPOSSIBLE && c4 !=IMPOSSIBLE) {
-    return new color[]{c1, c2, c3, c4};
-  } else if (matchPattern(cls, new boolean[]{true, true, false, true})) {  
-    return new color[]{IMPOSSIBLE, c2, c1, c4};
-  } else if (matchPattern(cls, new boolean[]{true, true, true, false})) {
-    return new color[]{c1, IMPOSSIBLE, c3, c2};
-  } else if (matchPattern(cls, new boolean[]{true, false, true, false})) {
-    return new color[]{IMPOSSIBLE, IMPOSSIBLE, c3, c1};
-  } else if (matchPattern(cls, new boolean[]{false, true, false, true})) {
-    return new color[]{IMPOSSIBLE, IMPOSSIBLE, c2, c4};
-  } else if (matchPattern(cls, new boolean[]{true, true, false, false})) {
-    if (random(1)<0.35) {
-      return new color[]{IMPOSSIBLE, IMPOSSIBLE, c1, c2};
-    } else {
-      return new color[]{c1, c2, IMPOSSIBLE, IMPOSSIBLE};
-    }
-  } else if (c1!=IMPOSSIBLE) {
-    return new color[]{IMPOSSIBLE, IMPOSSIBLE, c1, IMPOSSIBLE};
-  } else if (c2!=IMPOSSIBLE) {
-    return new color[]{IMPOSSIBLE, IMPOSSIBLE, IMPOSSIBLE, c2};
-  } else {
-    return new color[]{c1, c2, c3, c4};
-  }
+  float[]temp=pt1;
+  pt1=pt2;
+  pt2=temp;
 }
