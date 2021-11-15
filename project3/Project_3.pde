@@ -14,7 +14,7 @@ void setup() {
   for (int i=0; i<pt1.length; i++) {
     pt1[i]=0;
     pt2[i]=0;
-  }
+ }
 }
 
 void draw() {
